@@ -14,7 +14,6 @@ public class UtilityCalculator {
 
         double SRGCapability = 0;
         double marginalUtility;
-        double cost = 0;
         Set<Integer> enemy = agent.getEnemy();
         Set<Integer> secondaryEnemy = agent.getSecondaryEnemy(state);
         for (int id : enemy) {
@@ -29,19 +28,16 @@ public class UtilityCalculator {
         if (allianceSize == 0) {
             marginalUtility = agent.capability - SRGCapability;
         } else {
-            if (state.year < 1945) {
-                cost = Math.pow(allianceSize, 2.0);
-            } else {
-                cost = Math.pow(allianceSize, 1.2);
-            }
-
-            double sum_uij = 0;
+            int n = state.allAgents.size();
+            double sum_uij_minus_cij = 0;
             for (int j : agent.getAlliance()) {
                 double u_ij = utilityIJ(state, agent, state.getAgent(j));
-                sum_uij += u_ij;
+                double c_ij = (u_ij*state.getAgent(j).getAlliance().size())/(n-1);
+                sum_uij_minus_cij += u_ij;
+                logger.debug(String.format("i=:%s, j=%s, uij=%s, cij=%s", agent.id, j, u_ij, c_ij));
             }
 
-            marginalUtility = agent.capability + sum_uij - 0.2 * cost - SRGCapability;
+            marginalUtility = agent.capability + sum_uij_minus_cij - SRGCapability;
 
         }
         return marginalUtility;

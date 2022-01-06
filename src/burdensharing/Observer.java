@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class Observer implements Steppable {
 
-    private static final Logger logger = Logger.getLogger(SimEnvironment.class);
+    private static final Logger logger = Logger.getLogger(Observer.class);
 
     @Override
     public void step(SimState simState) {
@@ -45,7 +45,7 @@ public class Observer implements Steppable {
         }
 
         // determine if we should terminate the simulation
-        if (state.stableIter == 3 || state.schedule.getSteps() == state.MaxIteration) {
+        if (state.stableIter == 2 || state.schedule.getSteps() == state.MaxIteration) {
             state.endSimulation = true;
             try {
                 generateNextYearInput(state);
@@ -191,7 +191,7 @@ public class Observer implements Steppable {
         } else {
             if (state.schedule.getSteps() == 0) {
                 csvFile.delete();
-                logger.info(String.format("Delete the original file %s", state.outputDataFile));
+                logger.info(String.format("Delete the original file %s", state.variableCheckingFile));
 
                 writer = new FileWriter(csvFile.getAbsoluteFile(), true);
                 writer.write(String.join(",", header_variableChecking));

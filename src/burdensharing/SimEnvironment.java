@@ -30,10 +30,10 @@ public class SimEnvironment extends SimState {
     public Map<Integer, Double> allUtilities = new HashMap<>();
 
     // other local variables
-    public double offerUpperBound = 1;
-    public double offerLowerBound = -1;
+    public double offerUpperBound = 1.0;
+    public double offerLowerBound = -1.0;
     public boolean endSimulation = false;
-    public int MaxIteration = 20;
+    public int MaxIteration = 10;
     public int OfferChange = 0;
     public int stableIter = 0;
 
@@ -48,6 +48,7 @@ public class SimEnvironment extends SimState {
         String parent = file.getAbsoluteFile().getParent();
         outputDataFile = Paths.get(parent, String.format("%s_output.csv", year)).toString();
         variableCheckingFile = Paths.get(parent, String.format("%s_variable_checking.csv", year)).toString();
+
     }
 
     public static void main(String[] args) {
