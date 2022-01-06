@@ -32,7 +32,7 @@ public class UtilityCalculator {
             if (state.year < 1945) {
                 cost = Math.pow(allianceSize, 2.0);
             } else {
-                cost = Math.pow(allianceSize, 1.2);
+                cost = Math.pow(allianceSize, 0.5);
             }
 
             double sum_uij = 0;
