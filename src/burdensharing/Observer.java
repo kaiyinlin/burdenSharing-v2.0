@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class Observer implements Steppable {
 
-    private static final Logger logger = Logger.getLogger(SimEnvironment.class);
+    private static final Logger logger = Logger.getLogger(Observer.class);
 
     @Override
     public void step(SimState simState) {
