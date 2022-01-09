@@ -28,9 +28,10 @@ public class SimEnvironment extends SimState {
     public List<Integer> agentIdList;
     public Map<Integer, Agent> allAgents = new HashMap<Integer, Agent>();
     public Map<Integer, Double> allUtilities = new HashMap<>();
+    public Map<Integer, Double> allCapability = new HashMap<>();
 
     // other local variables
-    public double offerUpperBound = 0.5;
+    public double offerUpperBound = 1;
     public double offerLowerBound = -1;
     public boolean endSimulation = false;
     public int MaxIteration = 20;
@@ -84,6 +85,10 @@ public class SimEnvironment extends SimState {
 
         // set agents
         makeAgents(dataInformation);
+        for (int agentId : agentIdList) {
+            allCapability.put(agentId, getAgent(agentId).capability);
+        }
+
         updateUtilities();
         scheduleAgents();
 
@@ -136,8 +141,11 @@ public class SimEnvironment extends SimState {
     }
 
     public List<Integer> getScheduleOrder() {
+//        Map<Integer, Double> sorted =
+//                allUtilities.entrySet().stream().sorted(Map.Entry.comparingByValue())
+//                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         Map<Integer, Double> sorted =
-                allUtilities.entrySet().stream().sorted(Map.Entry.comparingByValue())
+                allCapability.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         return new ArrayList<>(sorted.keySet());
     }
@@ -150,8 +158,7 @@ public class SimEnvironment extends SimState {
             // only Schedule those which needs more alliance
             schedule.scheduleOnce(a, o);
             if (logger.isDebugEnabled()) {
-                double agentUtility = allUtilities.get(s);
-                logger.debug(String.format("schedule %s with utility %s", a.id, agentUtility));
+                logger.debug(String.format("schedule %s with utility %s", a.id, a.capability));
             }
         }
     }
