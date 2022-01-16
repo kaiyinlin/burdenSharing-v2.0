@@ -32,9 +32,9 @@ public class UtilityCalculator {
             double sum_uij_minus_cij = 0;
             for (int j : agent.getAlliance()) {
                 double u_ij = utilityIJ(state, agent, state.getAgent(j));
-                double c_ij = (u_ij*state.getAgent(j).getAlliance().size())/(n-1);
+                double c_ij = (0.8*state.getAgent(j).getAlliance().size())/(n-1);
                 sum_uij_minus_cij += u_ij;
-                logger.debug(String.format("i=:%s, j=%s, uij=%s, cij=%s", agent.id, j, u_ij, c_ij));
+                logger.info(String.format("i=:%s, j=%s, uij=%s, cij=%s", agent.id, j, u_ij, c_ij));
             }
 
             marginalUtility = agent.capability + sum_uij_minus_cij - SRGCapability;

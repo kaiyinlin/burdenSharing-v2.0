@@ -30,8 +30,8 @@ public class SimEnvironment extends SimState {
     public Map<Integer, Double> allUtilities = new HashMap<>();
 
     // other local variables
-    public double offerUpperBound = 2.0;
-    public double offerLowerBound = -2.0;
+    public double offerUpperBound = 1.0;
+    public double offerLowerBound = -1.0;
     public boolean endSimulation = false;
     public int MaxIteration = 10;
     public int OfferChange = 0;
