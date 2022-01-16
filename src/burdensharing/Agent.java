@@ -73,12 +73,14 @@ public class Agent implements Steppable {
                         this.id, potentialOrderedList.get(0), potentialAllies_uij.get(potentialOrderedList.get(0))));
                 Agent targetAgent = state.getAgent(potentialOrderedList.get(0));
                 boolean accept = OfferUtils.acceptOffer(state, this, targetAgent);
+                logger.debug("Accept Offer: " + accept);
                 if (accept) {
-                    OfferUtils.makeOffer(this, targetAgent);
+                    boolean validOffer = OfferUtils.validateOffer(state, this, targetAgent);
+                    if (validOffer && logger.isDebugEnabled()) {
+                        logger.debug("Offer change: f" + state.OfferChange);
+                    }
                 }
 
-                // recalculate the utility
-                state.updateUtility(this);
                 potentialOrderedList.remove(0);
             }
 
@@ -92,8 +94,12 @@ public class Agent implements Steppable {
                         this.id, potentialAllieMax));
                 boolean accept = OfferUtils.acceptOffer(state, this, state.getAgent(potentialAllieMax));
                 if (accept) {
-                    OfferUtils.makeOffer(this, state.getAgent(potentialAllieMax));
-                    OfferUtils.dropOffer(this, state.getAgent(currentAllieMin));
+                    boolean validOffer = OfferUtils.validateOffer(state, this, state.getAgent(potentialAllieMax));
+                    logger.debug("Validate Offer" + validOffer);
+                    if (validOffer) {
+                        OfferUtils.dropOffer(this, state.getAgent(currentAllieMin));
+                        logger.debug("Offer change: " + state.OfferChange);
+                    }
                 }
             }
         }
@@ -103,7 +109,7 @@ public class Agent implements Steppable {
     }
 
     public boolean needMorePartner(SimEnvironment state) {
-        return utility > state.offerLowerBound && utility < state.offerUpperBound;
+        return utility < state.offerUpperBound;
     }
 
     public Set<Integer> getEnemy() {

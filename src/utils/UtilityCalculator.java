@@ -30,9 +30,9 @@ public class UtilityCalculator {
             marginalUtility = agent.capability - SRGCapability;
         } else {
             if (state.year < 1943) {
-                cost = Math.pow(allianceSize, 2.0);
+                cost = Math.pow(allianceSize, state.costPowerBefore);
             } else {
-                cost = Math.pow(allianceSize, 1);
+                cost = Math.pow(allianceSize, state.costPowerAfter);
             }
 
             double sum_uij = 0;
@@ -41,7 +41,7 @@ public class UtilityCalculator {
                 sum_uij += u_ij;
             }
 
-            marginalUtility = agent.capability + sum_uij - 0.2 * cost - SRGCapability;
+            marginalUtility = agent.capability + sum_uij - state.costPenalty * cost - SRGCapability;
 
         }
         return marginalUtility;
