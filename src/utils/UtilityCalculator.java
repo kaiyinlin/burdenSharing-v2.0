@@ -40,7 +40,7 @@ public class UtilityCalculator {
                 double u_ij = utilityIJ(state, agent, state.getAgent(j));
                 sum_uij += u_ij;
             }
-
+            logger.debug(String.format("sum_uij=%s and cost=%s", sum_uij,state.costPenalty*cost));
             marginalUtility = agent.capability + sum_uij - state.costPenalty * cost - SRGCapability;
 
         }
@@ -57,9 +57,9 @@ public class UtilityCalculator {
         aj.updateSRG(state);
 
         // calculate the u_ij
-        double u_ij = aj.capability * (0.6 * attractiveness(ai, aj) +
-                0.1 * prevention(state, ai, aj) +
-                0.3 * trust(ai, aj));
+        double u_ij = aj.capability * (state.uij_alpha * attractiveness(ai, aj) +
+                state.uij_beta * prevention(state, ai, aj) +
+                state.uij_gamma * trust(ai, aj));
         return u_ij;
     }
 
