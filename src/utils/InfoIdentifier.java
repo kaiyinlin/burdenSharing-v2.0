@@ -7,16 +7,18 @@ public class InfoIdentifier {
     private final Integer id;
     private final double capability;
     private final Set<Integer> enemy;
+    private final Set<Integer> secondaryEnemy;
     private final Integer democracy;
     private final Set<Integer> neighbor;
     private final Map<Integer, Integer> culture;
     private final Set<Integer> alliance;
 
-    public InfoIdentifier(Integer id, double capability, Integer democracy, Set<Integer> enemy,
+    public InfoIdentifier(Integer id, double capability, Integer democracy, Set<Integer> enemy, Set<Integer> secondaryEnemy,
                           Set<Integer> neighbor, Map<Integer, Integer> culture, Set<Integer> alliance) {
         this.id = id;
         this.capability = capability;
         this.enemy = enemy;
+        this.secondaryEnemy = secondaryEnemy;
         this.democracy = democracy;
         this.neighbor = neighbor;
         this.culture = culture;
@@ -39,6 +41,10 @@ public class InfoIdentifier {
         return enemy;
     }
 
+    public Set<Integer> getSecondaryEnemy(){
+        return secondaryEnemy;
+    }
+
     public Set<Integer> getNeighbor() {
         return neighbor;
     }
@@ -53,6 +59,10 @@ public class InfoIdentifier {
 
     public void updateEnemy(Integer agentId) {
         this.enemy.add(agentId);
+    }
+
+    public void updateSecondaryEnemy(Integer agentId) {
+        this.secondaryEnemy.add(agentId);
     }
 
     public void updateNeighbor(Integer agentId) {

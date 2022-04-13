@@ -29,19 +29,20 @@ public class UtilityCalculator {
         if (allianceSize == 0) {
             marginalUtility = agent.capability - SRGCapability;
         } else {
-            if (state.year < 1943) {
-                cost = Math.pow(allianceSize, 2.0);
+            if (state.year < 1945) {
+                cost = Math.pow(allianceSize, state.costPowerBefore);
             } else {
-                cost = Math.pow(allianceSize, 1);
+                cost = Math.pow(allianceSize, state.costPowerAfter);
             }
 
-            double sum_uij = 0;
+//            double sum_uij = 0;
+            double sum_capj = 0;
             for (int j : agent.getAlliance()) {
-                double u_ij = utilityIJ(state, agent, state.getAgent(j));
-                sum_uij += u_ij;
+//                double u_ij = utilityIJ(state, agent, state.getAgent(j));
+                sum_capj += state.getAgent(j).capability;
             }
-
-            marginalUtility = agent.capability + sum_uij - 0.2 * cost - SRGCapability;
+            //logger.debug(String.format("sum_uij=%s and cost=%s", sum_uij,state.costPenalty*cost));
+            marginalUtility = agent.capability + sum_capj - state.costPenalty * cost - SRGCapability;
 
         }
         return marginalUtility;
@@ -57,9 +58,12 @@ public class UtilityCalculator {
         aj.updateSRG(state);
 
         // calculate the u_ij
-        double u_ij = aj.capability * (0.6 * attractiveness(ai, aj) +
-                0.1 * prevention(state, ai, aj) +
-                0.3 * trust(ai, aj));
+        double u_ij = aj.capability* (state.uij_alpha * attractiveness(ai, aj) +
+                state.uij_beta * prevention(state, ai, aj) +
+                state.uij_gamma * trust(state, ai, aj));
+//        double u_ij = state.uij_alpha * attractiveness(ai, aj) +
+//                state.uij_beta * prevention(state, ai, aj) +
+//                state.uij_gamma * trust(state, ai, aj);
         return u_ij;
     }
 
@@ -72,17 +76,17 @@ public class UtilityCalculator {
 
         double A_ij;
         if (ai.democracy == 1) {
-            A_ij = 0.2 * EE + 0.3 * Dj + 0.1 * S + 0.2 * NE + 0.2 * T;
+            A_ij = 0.9593453 * EE + 0.5485924 * Dj + 1.477012 * S + 1.092695 * NE + 0.5274558 * T;
         } else {
-            A_ij = 0.3 * EE + 0.1 * Dj + 0.1 * S + 0.2 * NE + 0.2 * T;
+            A_ij = 0.8485381 * EE + 0.0211666 * Dj + 1.412664 * S + 0.6035882 * NE + 0.5274558 * T;
 
         }
         return A_ij;
     }
 
     public static int isCommonEnemy(Agent ai, Agent aj) {
-        Set<Integer> enemyI = ai.SRG;
-        Set<Integer> enemyJ = aj.SRG;
+        Set<Integer> enemyI = ai.getEnemy();
+        Set<Integer> enemyJ = aj.getEnemy();
 
         Set<Integer> intersection = SetUtils.intersection(enemyI, enemyJ);
         return intersection.size() > 0 ? 1 : 0;
@@ -90,7 +94,7 @@ public class UtilityCalculator {
     }
 
     public static int isEnemyNeighbor(Agent ai, Agent aj) {
-        Set<Integer> enemyI = ai.SRG;
+        Set<Integer> enemyI = ai.getEnemy();
         Set<Integer> enemyNeighbor = SetUtils.intersection(enemyI, aj.getNeighbors());
         return enemyNeighbor.size() > 0 ? 1 : 0;
     }
@@ -106,26 +110,34 @@ public class UtilityCalculator {
     public static double prevention(SimEnvironment state, Agent ai, Agent aj) {
         Set<Integer> primaryEnemyI = ai.getEnemy();
 
+        double A_kj_sum = 0;
         double A_kj = 0;
         for (int e : primaryEnemyI) {
             Agent ae = state.allAgents.get(e);
             ae.updateSRG(state);
-
             double a_ej = attractiveness(ae, aj); // attractiveness between ae and aj, ae = ai's primaryEnemy
-            A_kj += a_ej;
+            A_kj_sum += a_ej;
         }
+        if(primaryEnemyI.size() > 0){
+            A_kj = A_kj_sum/ primaryEnemyI.size();
+        }else{
+            A_kj = 0;
+        }
+
         return A_kj;
     }
 
-    public static double trust(Agent ai, Agent aj) {
+    public static double trust(SimEnvironment state, Agent ai, Agent aj) {
         double R_j = 0;
         Set<Integer> allianceJ = aj.getAlliance();
         if (allianceJ.size() == 0) {
             return 0;
         } else {
-            for (int l : allianceJ) {
-                double u_il = ai.uij.getOrDefault(l, 0.0);
-                R_j += u_il;
+            for (int k : allianceJ) {
+                Agent ak = state.allAgents.get(k); //ak is j's alliance
+                double a_kj = attractiveness(ak,aj); //attractiveness between ak and aj
+                //double u_il = ai.uij.getOrDefault(l, 0.0);
+                R_j += a_kj;
             }
         }
         return R_j;

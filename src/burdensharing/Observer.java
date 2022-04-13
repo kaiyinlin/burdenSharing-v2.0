@@ -231,7 +231,7 @@ public class Observer implements Steppable {
                 }
 
                 double Akj = UtilityCalculator.prevention(state, agentI, agentJ);
-                double Rj = UtilityCalculator.trust(agentI, agentJ);
+                double Rj = UtilityCalculator.trust(state, agentI, agentJ);
 
                 String info = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s \n",
                         stp, state.year, i, j, EE, Dj, NE, T,

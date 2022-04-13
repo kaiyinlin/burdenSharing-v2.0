@@ -53,12 +53,15 @@ public class InputDataParser {
             }
 
             InfoIdentifier agentInfo = info.getOrDefault(i, new InfoIdentifier(i, capI, democI, new HashSet<Integer>(),
-                    new HashSet<Integer>(), new HashMap<Integer, Integer>(), new HashSet<Integer>()));
+                    new HashSet<Integer>(), new HashSet<Integer>(), new HashMap<Integer, Integer>(), new HashSet<Integer>()));
 
             agentInfo.updateCulture(j, cultureIndex);
 
             if (enemy == 1 && !i.equals(j)) {
                 agentInfo.updateEnemy(j);
+            }
+            if (enemy == 2 && !i.equals(j)) {
+                agentInfo.updateSecondaryEnemy(j);
             }
             if (neighb == 1) {
                 agentInfo.updateNeighbor(j);

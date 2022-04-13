@@ -30,11 +30,20 @@ public class SimEnvironment extends SimState {
     public Map<Integer, Double> allUtilities = new HashMap<>();
     public Map<Integer, Double> allCapability = new HashMap<>();
 
-    // other local variables
-    public double offerUpperBound = 0;
-    public double offerLowerBound = -2;
-    public boolean endSimulation = false;
+    // parameters
+    public double offerUpperBound = 1;
+//    public double offerLowerBound = -1;
     public int MaxIteration = 20;
+    public double costPenalty = 0.01;
+    public double costPowerBefore = 2;
+    public double costPowerAfter = 0.5;
+    public double uij_alpha = 0.6;
+    public double uij_beta = 0.1;
+    public double uij_gamma = 0.3;
+
+
+    // set initial value
+    public boolean endSimulation = false;
     public int OfferChange = 0;
     public int stableIter = 0;
 
@@ -49,6 +58,9 @@ public class SimEnvironment extends SimState {
         String parent = file.getAbsoluteFile().getParent();
         outputDataFile = Paths.get(parent, String.format("%s_output.csv", year)).toString();
         variableCheckingFile = Paths.get(parent, String.format("%s_variable_checking.csv", year)).toString();
+
+        logger.info(String.format("HyperParameter: offerUpperBound=%s, maxIter=%s, costPenalty=%s , costPowerBefore=%s, costPowerAfter=%s",
+                offerUpperBound, MaxIteration, costPenalty, costPowerBefore, costPowerAfter));
     }
 
     public static void main(String[] args) {
@@ -113,7 +125,7 @@ public class SimEnvironment extends SimState {
         for (Integer agentId : agentIdList) {
             InfoIdentifier agentInfo = dataInformation.get(agentId);
             Agent a = new Agent(agentInfo.getId(), agentInfo.getCapability(), agentInfo.getDemocracy(),
-                    agentInfo.getEnemy(), agentInfo.getAlliance(), agentInfo.getNeighbor(),
+                    agentInfo.getEnemy(), agentInfo.getSecondaryEnemy(), agentInfo.getAlliance(), agentInfo.getNeighbor(),
                     agentInfo.getCulture());
             this.allAgents.put(a.id, a);
             logger.debug(String.format("Make Agent id = %s", a.id));
@@ -141,12 +153,12 @@ public class SimEnvironment extends SimState {
     }
 
     public List<Integer> getScheduleOrder() {
-//        Map<Integer, Double> sorted =
-//                allUtilities.entrySet().stream().sorted(Map.Entry.comparingByValue())
-//                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         Map<Integer, Double> sorted =
-                allCapability.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                allUtilities.entrySet().stream().sorted(Map.Entry.comparingByValue())
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+//        Map<Integer, Double> sorted =
+//                allCapability.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+//                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         return new ArrayList<>(sorted.keySet());
     }
 

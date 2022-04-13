@@ -24,18 +24,20 @@ public class Agent implements Steppable {
 
     // relationships
     Set<Integer> enemy; // original enemy
+    Set<Integer> secondaryEnemyFromFile; //original secondary enemy from file
     Set<Integer> alliance;
     Set<Integer> neighbors;
 
     public Set<Integer> SRG;
 
-    public Agent(int id, double capability, int democracy,
-                 Set<Integer> enemy, Set<Integer> alliance, Set<Integer> neighbors,
+    public Agent(int id, double capability, int democracy, Set<Integer> enemy,
+                 Set<Integer> secondaryEnemyFromFile, Set<Integer> alliance, Set<Integer> neighbors,
                  Map<Integer, Integer> culture) {
         this.id = id;
         this.capability = capability;
         this.democracy = democracy;
         this.enemy = enemy;
+        this.secondaryEnemyFromFile = secondaryEnemyFromFile;
         this.alliance = alliance;
         this.neighbors = neighbors;
         this.culture = culture;
@@ -44,7 +46,7 @@ public class Agent implements Steppable {
     @Override
     public void step(SimState simState) {
         logger.debug(String.format("Agent %s in step %s", this.id, simState.schedule.getSteps()));
-        logger.debug("Current alliance: " + alliance);
+//        logger.debug("Current alliance: " + alliance);
 
         SimEnvironment state = (SimEnvironment) simState;
         updateUij(state); // update the agent's uij for this round
@@ -73,12 +75,14 @@ public class Agent implements Steppable {
                         this.id, potentialOrderedList.get(0), potentialAllies_uij.get(potentialOrderedList.get(0))));
                 Agent targetAgent = state.getAgent(potentialOrderedList.get(0));
                 boolean accept = OfferUtils.acceptOffer(state, this, targetAgent);
+                logger.debug("Accept Offer: " + accept);
                 if (accept) {
-                    OfferUtils.makeOffer(this, targetAgent);
+                    boolean validOffer = OfferUtils.validateOffer(state, this, targetAgent);
+                    if (validOffer && logger.isDebugEnabled()) {
+                        logger.debug("Offer change: f" + state.OfferChange);
+                    }
                 }
 
-                // recalculate the utility
-                state.updateUtility(this);
                 potentialOrderedList.remove(0);
             }
 
@@ -92,8 +96,12 @@ public class Agent implements Steppable {
                         this.id, potentialAllieMax));
                 boolean accept = OfferUtils.acceptOffer(state, this, state.getAgent(potentialAllieMax));
                 if (accept) {
-                    OfferUtils.makeOffer(this, state.getAgent(potentialAllieMax));
-                    OfferUtils.dropOffer(this, state.getAgent(currentAllieMin));
+                    boolean validOffer = OfferUtils.validateOffer(state, this, state.getAgent(potentialAllieMax));
+                    logger.debug("Validate Offer" + validOffer);
+                    if (validOffer) {
+                        OfferUtils.dropOffer(this, state.getAgent(currentAllieMin));
+                        logger.debug("Offer change: " + state.OfferChange);
+                    }
                 }
             }
         }
@@ -103,7 +111,7 @@ public class Agent implements Steppable {
     }
 
     public boolean needMorePartner(SimEnvironment state) {
-        return utility > state.offerLowerBound && utility < state.offerUpperBound;
+        return utility < state.offerUpperBound;
     }
 
     public Set<Integer> getEnemy() {
@@ -128,10 +136,13 @@ public class Agent implements Steppable {
 
     public Set<Integer> getSecondaryEnemy(SimEnvironment state) {
         Set<Integer> secondaryEnemy = new HashSet<>();
-        for (int id : this.enemy) {
-            Set<Integer> enemiesAlliance = state.allAgents.get(id).alliance;
-            secondaryEnemy.addAll(enemiesAlliance);
-        }
+        //add secondaryEnemy from File
+        secondaryEnemy.addAll(this.secondaryEnemyFromFile);
+        //add secondary enemy from simulation
+//        for (int id : this.enemy) {
+//            Set<Integer> enemiesAlliance = state.allAgents.get(id).alliance;
+//            secondaryEnemy.addAll(enemiesAlliance);
+//        }
         return secondaryEnemy;
     }
 

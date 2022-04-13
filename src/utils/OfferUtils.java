@@ -40,11 +40,10 @@ public class OfferUtils {
             logger.debug(String.format("%s does not need alliance", aj.id));
         }
         double u_ji = UtilityCalculator.utilityIJ(state, aj, ai);
-        if (u_ji < 0) {
+        if (u_ji <= 0) {
             logger.debug(String.format("%s does not accept offer b/c u_ji > 0", aj.id));
         }
         if (potentialAllieJ.contains(ai.id) && needAllies && u_ji > 0) {
-            state.OfferChange += 1;
             return true;
         } else {
             return false;
@@ -61,5 +60,28 @@ public class OfferUtils {
         aj.dropAlliance(ai.id);
     }
 
+    public static boolean validateOffer(SimEnvironment state, Agent ai, Agent aj) {
+        // check if both ai and aj will benefit from the offer
+        boolean valid = true;
+        makeOffer(ai, aj);
+
+        double oldAiU = ai.utility;
+        double oldAjU = aj.utility;
+        state.updateUtility(ai);
+        state.updateUtility(aj);
+        state.OfferChange += 1;
+        if (ai.utility < oldAiU || aj.utility < oldAjU) {
+            dropOffer(ai, aj);
+            logger.debug(String.format("Decide to drop the offer between %s and %s since the utility not improved utility (old, new): (%s, %s), (%s, %s)",
+                    ai.id, aj.id, oldAiU, ai.utility, oldAjU, aj.utility));
+
+            //rollback the utilities
+            state.updateUtility(ai);
+            state.updateUtility(aj);
+            state.OfferChange -= 1;
+            valid = false;
+        }
+        return valid;
+    }
 
 }
