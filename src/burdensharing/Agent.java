@@ -5,6 +5,7 @@ import sim.engine.Steppable;
 import org.apache.log4j.Logger;
 import utils.OfferUtils;
 import utils.UtilityCalculator;
+import utils.burdenSharingCalculator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ public class Agent implements Steppable {
     public Map<Integer, Integer> culture;
     public double utility;
     public Map<Integer, Double> uij = new HashMap<>();
+    public Map<Long, Double> burdenSharing = new HashMap<>();
 
 
     // relationships
@@ -172,6 +174,12 @@ public class Agent implements Steppable {
             uij.put(agentId, u);
         }
     }
+
+    public void updateBurdenSharing(SimEnvironment state){
+        double bs = burdenSharingCalculator.burdenSharing(state, this);
+        burdenSharing.put(state.schedule.getSteps(), bs);
+    }
+
 
 
 }

@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import utils.UtilityCalculator;
+import utils.burdenSharingCalculator;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -11,10 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Observer implements Steppable {
@@ -36,6 +34,7 @@ public class Observer implements Steppable {
         // writing the step status, skip the step 0
         for (Agent agent : state.allAgents.values()) {
             agent.updateUij(state);
+            agent.updateBurdenSharing(state);
         }
         try {
             collectData(state);
@@ -60,7 +59,8 @@ public class Observer implements Steppable {
 
     private void collectData(SimEnvironment state) throws IOException {
         String[] header_ALL = {"step", "year", "state_i", "state_j", "cap_i", "cap_j", "cultureSim",
-                "democ_i", "democ_j", "neighbor", "enemy", "ally_ij", "u_ij", "currentU", "commonAllianceSize"};
+                "democ_i", "democ_j", "neighbor", "enemy", "ally_ij", "u_ij", "currentU", "commonAllianceSize",
+                "burdenSharing", "detection", "punishment", "emulation"};
 
         FileWriter writer;
         File csvFile = new File(state.outputDataFile);
@@ -104,10 +104,15 @@ public class Observer implements Steppable {
                 Set<Integer> commonAlliance = new HashSet<>(agentI.alliance);
                 commonAlliance.retainAll(agentJ.alliance);
                 int commonAllieSize = commonAlliance.size();
+                double burdenSharing = agentI.burdenSharing.get(stp);
+                double detection = burdenSharingCalculator.detection(state, agentI);
+                double punishment = burdenSharingCalculator.punishment(state, agentI);
+                double emulation = burdenSharingCalculator.emulation(state, agentI);
 
-                String info = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+                String info = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
                         stp, state.year, i, j, agentI.capability, agentJ.capability, cultureSim,
-                        agentI.democracy, agentJ.democracy, neighbor, enemy, ally, uij, currentU, commonAllieSize);
+                        agentI.democracy, agentJ.democracy, neighbor, enemy, ally, uij, currentU, commonAllieSize,
+                        burdenSharing, detection, punishment, emulation);
                 writer.write(info);
                 writer.write("\n");
             }
@@ -247,6 +252,7 @@ public class Observer implements Steppable {
         }
         writer.flush();
         writer.close();
-
     }
+
+
 }

@@ -34,12 +34,12 @@ public class SimEnvironment extends SimState {
     public double offerUpperBound = 1;
 //    public double offerLowerBound = -1;
     public int MaxIteration = 20;
-    public double costPenalty = 0.01;
+    public double costPenalty = 0.005;
     public double costPowerBefore = 2;
     public double costPowerAfter = 0.5;
-    public double uij_alpha = 0.6;
-    public double uij_beta = 0.1;
-    public double uij_gamma = 0.3;
+    public double uij_alpha = 1.0;
+    public double uij_beta = 0;
+    public double uij_gamma = 0;
 
 
     // set initial value
@@ -128,6 +128,7 @@ public class SimEnvironment extends SimState {
                     agentInfo.getEnemy(), agentInfo.getSecondaryEnemy(), agentInfo.getAlliance(), agentInfo.getNeighbor(),
                     agentInfo.getCulture());
             this.allAgents.put(a.id, a);
+            a.burdenSharing.put((long)0,(double)0);
             logger.debug(String.format("Make Agent id = %s", a.id));
         }
     }
