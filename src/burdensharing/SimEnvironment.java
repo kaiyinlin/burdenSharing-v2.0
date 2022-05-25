@@ -23,6 +23,7 @@ public class SimEnvironment extends SimState {
     public String nextInputData;
     public String outputDataFile;
     public String variableCheckingFile;
+    public String burdenSharingFile;
     public long year;
 
     public List<Integer> agentIdList;
@@ -58,6 +59,7 @@ public class SimEnvironment extends SimState {
         String parent = file.getAbsoluteFile().getParent();
         outputDataFile = Paths.get(parent, String.format("%s_output.csv", year)).toString();
         variableCheckingFile = Paths.get(parent, String.format("%s_variable_checking.csv", year)).toString();
+        burdenSharingFile = Paths.get(parent, String.format("%s_burdenSharing.csv", year)).toString();
 
         logger.info(String.format("HyperParameter: offerUpperBound=%s, maxIter=%s, costPenalty=%s , costPowerBefore=%s, costPowerAfter=%s",
                 offerUpperBound, MaxIteration, costPenalty, costPowerBefore, costPowerAfter));
@@ -93,7 +95,7 @@ public class SimEnvironment extends SimState {
         Map<Integer, InfoIdentifier> dataInformation = getDataInformation();
         agentIdList = new ArrayList<>(dataInformation.keySet());
         logger.info(String.format("Number of agents(country) in the simulation: %s", agentIdList.size()));
-        logger.debug("Agents = " + Arrays.toString(new List[]{agentIdList}));
+        //logger.debug("Agents = " + Arrays.toString(new List[]{agentIdList}));
 
         // set agents
         makeAgents(dataInformation);
@@ -107,7 +109,7 @@ public class SimEnvironment extends SimState {
         // update the initial uij
         for (Agent agent : allAgents.values()) {
             agent.updateUij(this);
-            logger.debug(String.format("Update uij map for %s", agent.id));
+            //logger.debug(String.format("Update uij map for %s", agent.id));
         }
 
         Observer obs = new Observer();
@@ -126,10 +128,10 @@ public class SimEnvironment extends SimState {
             InfoIdentifier agentInfo = dataInformation.get(agentId);
             Agent a = new Agent(agentInfo.getId(), agentInfo.getCapability(), agentInfo.getDemocracy(),
                     agentInfo.getEnemy(), agentInfo.getSecondaryEnemy(), agentInfo.getAlliance(), agentInfo.getNeighbor(),
-                    agentInfo.getCulture());
+                    agentInfo.getCulture(), agentInfo.getAllianceDuration());
             this.allAgents.put(a.id, a);
             a.burdenSharing.put((long)0,(double)0);
-            logger.debug(String.format("Make Agent id = %s", a.id));
+            //logger.debug(String.format("Make Agent id = %s", a.id));
         }
     }
 
@@ -171,7 +173,7 @@ public class SimEnvironment extends SimState {
             // only Schedule those which needs more alliance
             schedule.scheduleOnce(a, o);
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("schedule %s with utility %s", a.id, a.capability));
+                //logger.debug(String.format("schedule %s with utility %s", a.id, a.capability));
             }
         }
     }

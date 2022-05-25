@@ -14,7 +14,7 @@ public class InputDataParser {
     String fileDirectory;
     Path path;
     List<String[]> data;
-    Map<Integer, InfoIdentifier> info = new HashMap<Integer, InfoIdentifier>();
+    Map<Integer, InfoIdentifier>  info = new HashMap<Integer, InfoIdentifier>();
 
     public InputDataParser(String fileDirectory) {
         // TODO Auto-generated constructor stub
@@ -36,6 +36,7 @@ public class InputDataParser {
         // parse file information
         for (String[] lst : data) {
             Integer alliance;
+            Integer allianceDuration;
             Integer i = Integer.valueOf(lst[1]); //key
             Integer j = Integer.valueOf(lst[2]);
             double capI = Double.valueOf(lst[3]);
@@ -46,16 +47,27 @@ public class InputDataParser {
             Integer democI = Integer.valueOf(lst[6]);
             Integer neighb = Integer.valueOf(lst[8]);
             Integer enemy = Integer.valueOf(lst[9]);
+            //alliance
             if (lst.length == 11) {
                 alliance = Integer.valueOf(lst[10]);
             } else {
                 alliance = 0;
             }
+            //alliance duration
+            if(lst.length ==12){
+                allianceDuration = Integer.valueOf(lst[11]);
+            } else{
+                allianceDuration = 0;
+            }
 
             InfoIdentifier agentInfo = info.getOrDefault(i, new InfoIdentifier(i, capI, democI, new HashSet<Integer>(),
-                    new HashSet<Integer>(), new HashSet<Integer>(), new HashMap<Integer, Integer>(), new HashSet<Integer>()));
+                    new HashSet<Integer>(), new HashSet<Integer>(), new HashMap<Integer, Integer>(), new HashSet<Integer>(),
+                    new HashMap<Integer, Integer>()));
 
             agentInfo.updateCulture(j, cultureIndex);
+            if(!i.equals(j)){
+                agentInfo.updateAllianceDuration(j, allianceDuration);
+            }
 
             if (enemy == 1 && !i.equals(j)) {
                 agentInfo.updateEnemy(j);

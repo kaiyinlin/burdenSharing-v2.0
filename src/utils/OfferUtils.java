@@ -32,17 +32,17 @@ public class OfferUtils {
         // 2. if i is in j's potentialAllies
         // 3. if u_ji > 0
         Set<Integer> potentialAllieJ = getPotentialAllies(state, aj);
-        if (!potentialAllieJ.contains(ai.id)) {
-            logger.debug(String.format("%s not in potentialAllies", ai.id));
-        }
+//        if (!potentialAllieJ.contains(ai.id)) {
+//            logger.debug(String.format("%s not in potentialAllies", ai.id));
+//        }
         boolean needAllies = aj.needMorePartner(state);
-        if (!needAllies) {
-            logger.debug(String.format("%s does not need alliance", aj.id));
-        }
+//        if (!needAllies) {
+//            logger.debug(String.format("%s does not need alliance", aj.id));
+//        }
         double u_ji = UtilityCalculator.utilityIJ(state, aj, ai);
-        if (u_ji <= 0) {
-            logger.debug(String.format("%s does not accept offer b/c u_ji > 0", aj.id));
-        }
+//        if (u_ji <= 0) {
+//            logger.debug(String.format("%s does not accept offer b/c u_ji > 0", aj.id));
+//        }
         if (potentialAllieJ.contains(ai.id) && needAllies && u_ji > 0) {
             return true;
         } else {
@@ -72,8 +72,8 @@ public class OfferUtils {
         state.OfferChange += 1;
         if (ai.utility < oldAiU || aj.utility < oldAjU) {
             dropOffer(ai, aj);
-            logger.debug(String.format("Decide to drop the offer between %s and %s since the utility not improved utility (old, new): (%s, %s), (%s, %s)",
-                    ai.id, aj.id, oldAiU, ai.utility, oldAjU, aj.utility));
+//            logger.debug(String.format("Decide to drop the offer between %s and %s since the utility not improved utility (old, new): (%s, %s), (%s, %s)",
+//                    ai.id, aj.id, oldAiU, ai.utility, oldAjU, aj.utility));
 
             //rollback the utilities
             state.updateUtility(ai);

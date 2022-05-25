@@ -11,7 +11,7 @@ printf '{"inputData":"%s/1816.csv", "year":1816, "nextInputData":"%s/1817_input.
 java -jar $JAR_NAME run.json
 
 # from 1817
-for ((i=1817;i<=2014;i++));
+for ((i=1817;i<=1825;i++));
 do
   echo "RUNNING YEAR="+$i
   printf '{"inputData":"%s/%s_input.csv", "year":%s, "nextInputData":"%s/%s_input.csv"}\n' $DATA_BY_YEAR_LOCATION $i $i $DATA_BY_YEAR_LOCATION $(($i+1)) > run.json

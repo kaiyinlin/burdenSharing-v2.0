@@ -19,6 +19,7 @@ public class Agent implements Steppable {
     public int democracy;
     public double capability;
     public Map<Integer, Integer> culture;
+    public Map<Integer, Integer> allianceDuration;
     public double utility;
     public Map<Integer, Double> uij = new HashMap<>();
     public Map<Long, Double> burdenSharing = new HashMap<>();
@@ -30,11 +31,12 @@ public class Agent implements Steppable {
     Set<Integer> alliance;
     Set<Integer> neighbors;
 
+
     public Set<Integer> SRG;
 
     public Agent(int id, double capability, int democracy, Set<Integer> enemy,
                  Set<Integer> secondaryEnemyFromFile, Set<Integer> alliance, Set<Integer> neighbors,
-                 Map<Integer, Integer> culture) {
+                 Map<Integer, Integer> culture, Map<Integer, Integer> allianceDuration) {
         this.id = id;
         this.capability = capability;
         this.democracy = democracy;
@@ -43,11 +45,12 @@ public class Agent implements Steppable {
         this.alliance = alliance;
         this.neighbors = neighbors;
         this.culture = culture;
+        this.allianceDuration = allianceDuration;
     }
 
     @Override
     public void step(SimState simState) {
-        logger.debug(String.format("Agent %s in step %s", this.id, simState.schedule.getSteps()));
+        //logger.debug(String.format("Agent %s in step %s", this.id, simState.schedule.getSteps()));
 //        logger.debug("Current alliance: " + alliance);
 
         SimEnvironment state = (SimEnvironment) simState;
@@ -70,19 +73,19 @@ public class Agent implements Steppable {
                     potentialAllies_uij.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
             List<Integer> potentialOrderedList = new ArrayList<>(sorted.keySet()); // sort the potential allies by utilities
-            logger.debug(String.format("Agent %s potentialAllies", this.id) + potentialOrderedList);
+            //logger.debug(String.format("Agent %s potentialAllies", this.id) + potentialOrderedList);
             while (needMorePartner(state) && potentialOrderedList.size() > 0) {
                 // make the offer
-                logger.debug(String.format("Agent %s making offer to %s, u_ij=%s",
-                        this.id, potentialOrderedList.get(0), potentialAllies_uij.get(potentialOrderedList.get(0))));
+//                logger.debug(String.format("Agent %s making offer to %s, u_ij=%s",
+//                        this.id, potentialOrderedList.get(0), potentialAllies_uij.get(potentialOrderedList.get(0))));
                 Agent targetAgent = state.getAgent(potentialOrderedList.get(0));
                 boolean accept = OfferUtils.acceptOffer(state, this, targetAgent);
-                logger.debug("Accept Offer: " + accept);
+                //logger.debug("Accept Offer: " + accept);
                 if (accept) {
                     boolean validOffer = OfferUtils.validateOffer(state, this, targetAgent);
-                    if (validOffer && logger.isDebugEnabled()) {
-                        logger.debug("Offer change: f" + state.OfferChange);
-                    }
+//                    if (validOffer && logger.isDebugEnabled()) {
+//                        logger.debug("Offer change: f" + state.OfferChange);
+//                    }
                 }
 
                 potentialOrderedList.remove(0);
@@ -94,22 +97,22 @@ public class Agent implements Steppable {
             int currentAllieMin = Collections.min(currentAllies_uij.entrySet(), Map.Entry.comparingByValue()).getKey();
             if (currentAllies_uij.get(currentAllieMin) < potentialAllies_uij.get(potentialAllieMax)) {
                 // try to make offer to the potentialAllie with Max uij
-                logger.debug(String.format("Agent %s making offer to %s (switch Ally)",
-                        this.id, potentialAllieMax));
+                //logger.debug(String.format("Agent %s making offer to %s (switch Ally)",
+                //        this.id, potentialAllieMax));
                 boolean accept = OfferUtils.acceptOffer(state, this, state.getAgent(potentialAllieMax));
                 if (accept) {
                     boolean validOffer = OfferUtils.validateOffer(state, this, state.getAgent(potentialAllieMax));
-                    logger.debug("Validate Offer" + validOffer);
+                    //logger.debug("Validate Offer" + validOffer);
                     if (validOffer) {
                         OfferUtils.dropOffer(this, state.getAgent(currentAllieMin));
-                        logger.debug("Offer change: " + state.OfferChange);
+                        //logger.debug("Offer change: " + state.OfferChange);
                     }
                 }
             }
         }
         state.updateUtilities(); // update utilities for all agents
-        logger.debug(String.format("%s has alliance %s at the end of step with utility %s",
-                this.id, alliance, utility));
+//        logger.debug(String.format("%s has alliance %s at the end of step with utility %s",
+//                this.id, alliance, utility));
     }
 
     public boolean needMorePartner(SimEnvironment state) {

@@ -38,7 +38,8 @@ public class Observer implements Steppable {
         }
         try {
             collectData(state);
-            variableChecking(state);
+            burdenSharingData(state);
+//            variableChecking(state);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,8 +60,7 @@ public class Observer implements Steppable {
 
     private void collectData(SimEnvironment state) throws IOException {
         String[] header_ALL = {"step", "year", "state_i", "state_j", "cap_i", "cap_j", "cultureSim",
-                "democ_i", "democ_j", "neighbor", "enemy", "ally_ij", "u_ij", "currentU", "commonAllianceSize",
-                "burdenSharing", "detection", "punishment", "emulation"};
+                "democ_i", "democ_j", "neighbor", "enemy", "ally_ij", "u_ij", "currentU", "commonAllianceSize"};
 
         FileWriter writer;
         File csvFile = new File(state.outputDataFile);
@@ -104,15 +104,10 @@ public class Observer implements Steppable {
                 Set<Integer> commonAlliance = new HashSet<>(agentI.alliance);
                 commonAlliance.retainAll(agentJ.alliance);
                 int commonAllieSize = commonAlliance.size();
-                double burdenSharing = agentI.burdenSharing.get(stp);
-                double detection = burdenSharingCalculator.detection(state, agentI);
-                double punishment = burdenSharingCalculator.punishment(state, agentI);
-                double emulation = burdenSharingCalculator.emulation(state, agentI);
 
-                String info = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+                String info = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
                         stp, state.year, i, j, agentI.capability, agentJ.capability, cultureSim,
-                        agentI.democracy, agentJ.democracy, neighbor, enemy, ally, uij, currentU, commonAllieSize,
-                        burdenSharing, detection, punishment, emulation);
+                        agentI.democracy, agentJ.democracy, neighbor, enemy, ally, uij, currentU, commonAllieSize);
                 writer.write(info);
                 writer.write("\n");
             }
@@ -149,7 +144,7 @@ public class Observer implements Steppable {
                     .findFirst()
                     .get();
             if (headerArray.length == 10) {
-                header = String.join(",", headerArray) + ",alliance\n";
+                header = String.join(",", headerArray) + ",alliance" + ",allianceDuration\n";
             } else {
                 header = String.join(",", headerArray) + "\n";
             }
@@ -165,13 +160,16 @@ public class Observer implements Steppable {
             Integer i = Integer.valueOf(lst[1]);
             Integer j = Integer.valueOf(lst[2]); //key
             int a = 0;
+            int al = 0;
             if (state.allAgents.containsKey(i) && state.allAgents.get(i).alliance.contains(j)) {
                 a = 1;
+                al = state.allAgents.get(i).allianceDuration.get(j) + 1;
             }
             if (headerArray.length == 10) {
-                result = String.join(",", lst) + "," + a + "\n";
+                result = String.join(",", lst) + "," + a + "," + al + "\n";
             } else {
                 lst[10] = String.valueOf(a);
+                lst[11] = String.valueOf(al);
                 result = String.join(",", lst) + "\n";
             }
             writer.write(result);
@@ -196,8 +194,6 @@ public class Observer implements Steppable {
         } else {
             if (state.schedule.getSteps() == 0) {
                 csvFile.delete();
-                logger.info(String.format("Delete the original file %s", state.outputDataFile));
-
                 writer = new FileWriter(csvFile.getAbsoluteFile(), true);
                 writer.write(String.join(",", header_variableChecking));
                 writer.write("\n");
@@ -254,5 +250,48 @@ public class Observer implements Steppable {
         writer.close();
     }
 
+    private void burdenSharingData(SimEnvironment state) throws IOException{
+        String[] header_burdenSharing = {"step", "year", "state_i", "currentU", "need",
+                "detection", "punishment", "emulation", "enemy_BS", "allianceDuration", "burdenSharing"};
+        FileWriter writer;
+        File csvFile = new File(state.burdenSharingFile);
+        if(!csvFile.exists()){
+            csvFile.createNewFile();
+            writer = new FileWriter(csvFile.getAbsoluteFile(), true);
+            writer.write(String.join(",", header_burdenSharing));
+            writer.write("\n");
+        }else{
+            if (state.schedule.getSteps() == 0) {
+                csvFile.delete();
+                writer = new FileWriter(csvFile.getAbsoluteFile(), true);
+                writer.write(String.join(",", header_burdenSharing));
+                writer.write("\n");
+            } else {
+                writer = new FileWriter(csvFile.getAbsoluteFile(), true);
+            }
+        }
+
+        // start writing
+        long stp = state.schedule.getSteps();
+        for (int i : state.agentIdList){
+            // write the information to csv
+            Agent agentI = state.getAgent(i);
+            double currentU = agentI.utility;
+            double burdenSharing = agentI.burdenSharing.get(stp);
+            int need = burdenSharingCalculator.need(agentI);
+            double detection = burdenSharingCalculator.detection(state, agentI);
+            double punishment = burdenSharingCalculator.punishment(state, agentI);
+            double emulation = burdenSharingCalculator.emulation(state, agentI);
+            double enemy_BS = burdenSharingCalculator.BS_enemy(state, agentI);
+            double allianceDuration = burdenSharingCalculator.allianceDuration(state, agentI);
+            String info = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+                    stp, state.year, i, currentU, need, detection, punishment, emulation,
+                    enemy_BS, allianceDuration, burdenSharing);
+            writer.write(info);
+            writer.write("\n");
+        }
+        writer.flush();
+        writer.close();
+    }
 
 }
