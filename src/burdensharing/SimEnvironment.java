@@ -19,6 +19,9 @@ public class SimEnvironment extends SimState {
 
     private static final Logger logger = Logger.getLogger(SimEnvironment.class);
 
+    // fixed variables
+    String DEFBURDPATH = "/Users/kaiyinlin/Desktop/defense_burden.csv";
+
     String inputDataFile;
     public String nextInputData;
     public String outputDataFile;
@@ -30,6 +33,7 @@ public class SimEnvironment extends SimState {
     public Map<Integer, Agent> allAgents = new HashMap<Integer, Agent>();
     public Map<Integer, Double> allUtilities = new HashMap<>();
     public Map<Integer, Double> allCapability = new HashMap<>();
+    public DefburdFactor defburdInfo;
 
     // parameters
     public double offerUpperBound = 1;
@@ -96,6 +100,9 @@ public class SimEnvironment extends SimState {
         agentIdList = new ArrayList<>(dataInformation.keySet());
         logger.info(String.format("Number of agents(country) in the simulation: %s", agentIdList.size()));
         //logger.debug("Agents = " + Arrays.toString(new List[]{agentIdList}));
+
+        // read Defburd information
+        defburdInfo = new DefburdFactor(DEFBURDPATH);
 
         // set agents
         makeAgents(dataInformation);
