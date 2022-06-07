@@ -52,9 +52,10 @@ public class burdenSharingCalculator {
         double D = 0;
         for (int j : allianceI) {
             Agent aj = state.allAgents.get(j); //aj is i's alliance
-            sum += aj.getAlliance().size(); //get the size of allies of aj, see how many friends your ally has
+            sum += aj.getAlliance().size()/(n-1); //get the size of allies of aj, see how many friends your ally has
         }
-        D = sum / (n - 1);
+        D = sum / allianceI.size();
+//        logger.debug(String.format("detection has sum_uji %s and n %s and the detection value was %s ", sum, n, D));
         return D;
     }
 
@@ -75,7 +76,8 @@ public class burdenSharingCalculator {
             double u_ji = aj.uij.get(ai.id); //get u_ji in this round
             sum += u_ji;
         }
-        P = sum / (n + 1);
+        P = sum / allianceI.size();
+//        logger.debug(String.format("punishment has sum_uji %s and n %s and the punishment value was %s ", sum, n, P));
         return P;
     }
 
@@ -94,7 +96,7 @@ public class burdenSharingCalculator {
             Agent aj = state.allAgents.get(j);//aj is i's ally
 //          double Bj = aj.burdenSharing.get(state.schedule.getSteps() - 1) - aj.burdenSharing.get(state.schedule.getSteps() - 2);
             double Bj = state.defburdInfo.getDeltaDefburd(aj.id, (int)state.year);
-            logger.debug(String.format("emulation: Bj's BS %s was calculated by last year BS %s and last two year BS %s", Bj, aj.burdenSharing.get(state.schedule.getSteps() - 1), aj.burdenSharing.get(state.schedule.getSteps() - 2)));
+//            logger.debug(String.format("emulation: Bj's BS %s was calculated by last year BS %s and last two year BS %s", Bj, aj.burdenSharing.get(state.schedule.getSteps() - 1), aj.burdenSharing.get(state.schedule.getSteps() - 2)));
             DBj += Bj; //calculate burden sharing level of aj and sum of them
         }
         if (allianceI.size() == 0) {
