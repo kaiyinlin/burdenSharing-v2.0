@@ -48,7 +48,7 @@ public class InputDataParser {
             Integer neighb = Integer.valueOf(lst[8]);
             Integer enemy = Integer.valueOf(lst[9]);
             //use actual ally data to calculate Burden Sharing; edit at 2022-07-06
-            Integer actualAlly = Integer.valueOf(lst[10]);
+            Integer actualAlliance = Integer.valueOf(lst[10]);
             //alliance (use simulation alliance data as input)
             if (lst.length == 12) {
                 alliance = Integer.valueOf(lst[11]);
@@ -84,8 +84,8 @@ public class InputDataParser {
             if (alliance == 1 && !i.equals(j)) {
                 agentInfo.updateAlliance(j);
             }
-            if (actualAlly == 1 && !i.equals(j)) {
-                agentInfo.updateActualAlly(j);
+            if (actualAlliance == 1 && !i.equals(j)) {
+                agentInfo.updateActualAlliance(j);
             }
             info.put(i, agentInfo);
 

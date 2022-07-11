@@ -25,18 +25,18 @@ public class UtilityCalculator {
             SRGCapability += (0.5 * state.getAgent(id).capability);
         }
 
-        double allianceSize = agent.getAlliance().size();
-        if (allianceSize == 0) {
+        double actualAllianceSize = agent.getActualAlliance().size();
+        if (actualAllianceSize == 0) {
             marginalUtility = agent.capability - SRGCapability;
         } else {
             if (state.year < 1945) {
-                cost = Math.pow(allianceSize, state.costPowerBefore);
+                cost = Math.pow(actualAllianceSize, state.costPowerBefore);
             } else {
-                cost = Math.pow(allianceSize, state.costPowerAfter);
+                cost = Math.pow(actualAllianceSize, state.costPowerAfter);
             }
 
             double sum_uij = 0;
-            for (int j : agent.getAlliance()) {
+            for (int j : agent.getActualAlliance()) {
                 double u_ij = utilityIJ(state, agent, state.getAgent(j));
                 sum_uij += u_ij;
             }
@@ -99,10 +99,10 @@ public class UtilityCalculator {
     }
 
     public static int commonAllianceSize(Agent ai, Agent aj) {
-        Set<Integer> allianceI = ai.getAlliance();
-        Set<Integer> allianceJ = aj.getAlliance();
+        Set<Integer> actualAllianceI = ai.getActualAlliance();
+        Set<Integer> actualAllianceJ = aj.getActualAlliance();
 
-        Set<Integer> commonAlliance = SetUtils.intersection(allianceI, allianceJ);
+        Set<Integer> commonAlliance = SetUtils.intersection(actualAllianceI, actualAllianceJ);
         return commonAlliance.size();
     }
 
@@ -128,7 +128,7 @@ public class UtilityCalculator {
 
     public static double trust(SimEnvironment state, Agent ai, Agent aj) {
         double R_j = 0;
-        Set<Integer> allianceJ = aj.getAlliance();
+        Set<Integer> allianceJ = aj.getActualAlliance();
         if (allianceJ.size() == 0) {
             return 0;
         } else {

@@ -46,12 +46,12 @@ public class burdenSharingCalculator {
      * @return
      */
     public static double detection(SimEnvironment state, Agent ai) {
-        Set<Integer> allianceI = ai.getAlliance();
+        Set<Integer> allianceI = ai.getActualAlliance();
         int n = state.allAgents.size();
         double sum = 0;
         for (int j : allianceI) {
             Agent aj = state.allAgents.get(j); //aj is i's alliance
-            int allianceJSize = aj.getAlliance().size();
+            int allianceJSize = aj.getActualAlliance().size();
             sum += (double) allianceJSize/(n-1); //get the size of allies of aj, see how many friends your ally has
         }
 //        D = sum / allianceI.size();
@@ -67,7 +67,7 @@ public class burdenSharingCalculator {
      * @return
      */
     public static double punishment(SimEnvironment state, Agent ai) {
-        Set<Integer> allianceI = ai.getAlliance(); //get i's allies
+        Set<Integer> allianceI = ai.getActualAlliance(); //get i's allies
         int n = state.allAgents.size();
         double sum = 0;
         double P = 0; //punishment value
@@ -89,7 +89,7 @@ public class burdenSharingCalculator {
      * @return
      */
     public static double emulation(SimEnvironment state, Agent ai) {
-        Set<Integer> allianceI = ai.getAlliance();//get i's allies
+        Set<Integer> allianceI = ai.getActualAlliance();//get i's allies
         double DBj = 0;
         double E = 0;
         for (int j : allianceI) {
@@ -108,13 +108,12 @@ public class burdenSharingCalculator {
     }
 
     public static double BS_enemy(SimEnvironment state, Agent ai) {
-        Set<Integer> enemyI = ai.getEnemy();
+        Set<Integer> enemyI = ai.getEnemy(); //just primary enemies
         double DBk = 0;
-        double Be = 0; //burden sharing of enemies
-        for (int k : enemyI) {
+        double Be; //burden sharing of enemies
+        for (int k : enemyI) { //primary enemies
             Agent ak = state.allAgents.get(k);
             double Bk = state.defburdInfo.getDeltaDefburd(ak.id, (int)state.year);
-//            double Bk = ak.burdenSharing.get(state.schedule.getSteps() - 1) - ak.burdenSharing.get(state.schedule.getSteps() - 2);
             DBk += Bk;
         }
         if (enemyI.size() == 0) {
@@ -126,7 +125,7 @@ public class burdenSharingCalculator {
     }
 
     public static double allianceDuration(SimEnvironment state, Agent ai) {
-        Set<Integer> allianceI = ai.getAlliance();
+        Set<Integer> allianceI = ai.getActualAlliance();
         int n = state.allAgents.size();
         double sumAd = 0; //sum of alliance duration
         double AD; //average alliance duration
