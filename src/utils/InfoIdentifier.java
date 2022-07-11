@@ -13,10 +13,11 @@ public class InfoIdentifier {
     private final Map<Integer, Integer> culture;
     private final Set<Integer> alliance;
     private final Map<Integer, Integer> allianceDuration;
+    private final Set<Integer> actualAlly;
 
     public InfoIdentifier(Integer id, double capability, Integer democracy, Set<Integer> enemy, Set<Integer> secondaryEnemy,
                           Set<Integer> neighbor, Map<Integer, Integer> culture, Set<Integer> alliance,
-                          Map<Integer, Integer> allianceDuration) {
+                          Map<Integer, Integer> allianceDuration, Set<Integer> actualAlly) {
         this.id = id;
         this.capability = capability;
         this.enemy = enemy;
@@ -26,6 +27,7 @@ public class InfoIdentifier {
         this.culture = culture;
         this.alliance = alliance;
         this.allianceDuration = allianceDuration;
+        this.actualAlly = actualAlly;
     }
 
     public Integer getId() {
@@ -56,6 +58,8 @@ public class InfoIdentifier {
         return alliance;
     }
 
+    public Set<Integer> getActualAlly() { return actualAlly; }
+
     public Map<Integer, Integer> getCulture() {
         return culture;
     }
@@ -77,6 +81,8 @@ public class InfoIdentifier {
     }
 
     public void updateAlliance(Integer agentId) { this.alliance.add(agentId); }
+
+    public void updateActualAlly(Integer agentId) { this.actualAlly.add(agentId);}
 
     public void updateCulture(Integer agentId, Integer sameCulture) { //agentID indicates j's id and see if i and j has same culture
         if (this.culture.containsKey(agentId)) {

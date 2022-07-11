@@ -35,14 +35,13 @@ public class UtilityCalculator {
                 cost = Math.pow(allianceSize, state.costPowerAfter);
             }
 
-//            double sum_uij = 0;
-            double sum_capj = 0;
+            double sum_uij = 0;
             for (int j : agent.getAlliance()) {
-//                double u_ij = utilityIJ(state, agent, state.getAgent(j));
-                sum_capj += state.getAgent(j).capability;
+                double u_ij = utilityIJ(state, agent, state.getAgent(j));
+                sum_uij += u_ij;
             }
             //logger.debug(String.format("sum_uij=%s and cost=%s", sum_uij,state.costPenalty*cost));
-            marginalUtility = agent.capability + sum_capj - state.costPenalty * cost - SRGCapability;
+            marginalUtility = agent.capability + sum_uij - state.costPenalty * cost - SRGCapability;
 
         }
         return marginalUtility;

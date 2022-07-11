@@ -143,7 +143,7 @@ public class Observer implements Steppable {
                     .map(s -> s.split(","))
                     .findFirst()
                     .get();
-            if (headerArray.length == 10) {
+            if (headerArray.length == 11) { //add actual_ally column at 2022-07-06
                 header = String.join(",", headerArray) + ",alliance" + ",allianceDuration\n";
             } else {
                 header = String.join(",", headerArray) + "\n";
@@ -165,11 +165,11 @@ public class Observer implements Steppable {
                 a = 1;
                 al = state.allAgents.get(i).allianceDuration.get(j) + 1;
             }
-            if (headerArray.length == 10) {
+            if (headerArray.length == 11) { //edit at 2022-07-06
                 result = String.join(",", lst) + "," + a + "," + al + "\n";
             } else {
-                lst[10] = String.valueOf(a);
-                lst[11] = String.valueOf(al);
+                lst[11] = String.valueOf(a); //edit at 2022-07-06
+                lst[12] = String.valueOf(al); //edit at 2022-07-06
                 result = String.join(",", lst) + "\n";
             }
             writer.write(result);

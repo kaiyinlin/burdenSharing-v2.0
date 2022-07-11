@@ -49,14 +49,14 @@ public class burdenSharingCalculator {
         Set<Integer> allianceI = ai.getAlliance();
         int n = state.allAgents.size();
         double sum = 0;
-        double D = 0;
         for (int j : allianceI) {
             Agent aj = state.allAgents.get(j); //aj is i's alliance
-            sum += aj.getAlliance().size()/(n-1); //get the size of allies of aj, see how many friends your ally has
+            int allianceJSize = aj.getAlliance().size();
+            sum += (double) allianceJSize/(n-1); //get the size of allies of aj, see how many friends your ally has
         }
-        D = sum / allianceI.size();
-//        logger.debug(String.format("detection has sum_uji %s and n %s and the detection value was %s ", sum, n, D));
-        return D;
+//        D = sum / allianceI.size();
+//        logger.debug(String.format("the detection value was %s ", sum));
+        return sum;
     }
 
     /**
@@ -76,7 +76,7 @@ public class burdenSharingCalculator {
             double u_ji = aj.uij.get(ai.id); //get u_ji in this round
             sum += u_ji;
         }
-        P = sum / allianceI.size();
+        P = sum / (n-1);
 //        logger.debug(String.format("punishment has sum_uji %s and n %s and the punishment value was %s ", sum, n, P));
         return P;
     }
@@ -134,7 +134,7 @@ public class burdenSharingCalculator {
             int ad = ai.allianceDuration.get(j);
             sumAd += ad;
         }
-        AD = sumAd / (n + 1);
+        AD = sumAd / (n - 1);
         return AD;
     }
 
