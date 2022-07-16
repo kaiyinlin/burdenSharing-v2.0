@@ -47,14 +47,14 @@ public class InputDataParser {
             Integer democI = Integer.valueOf(lst[6]);
             Integer neighb = Integer.valueOf(lst[8]);
             Integer enemy = Integer.valueOf(lst[9]);
-            //use actual ally data to calculate Burden Sharing; edit at 2022-07-06
-            Integer actualAlly = Integer.valueOf(lst[10]);
-            //alliance (use simulation alliance data as input)
-            if (lst.length == 12) {
-                alliance = Integer.valueOf(lst[11]);
-            } else {
-                alliance = 0;
-            }
+            //use actual alliance data as input; edit at 2022-07-15
+            alliance = Integer.valueOf(lst[10]);
+            //use simulated alliance data from last year as input)
+//            if (lst.length == 12) {
+//                alliance = Integer.valueOf(lst[11]);
+//            } else {
+//                alliance = 0;
+//            }
             //alliance duration
             if(lst.length ==13){
 //                allianceDuration = Integer.valueOf(lst[11]);
@@ -65,7 +65,7 @@ public class InputDataParser {
 
             InfoIdentifier agentInfo = info.getOrDefault(i, new InfoIdentifier(i, capI, democI, new HashSet<Integer>(),
                     new HashSet<Integer>(), new HashSet<Integer>(), new HashMap<Integer, Integer>(), new HashSet<Integer>(),
-                    new HashMap<Integer, Integer>(), new HashSet<Integer>()));
+                    new HashMap<Integer, Integer>()));
 
             agentInfo.updateCulture(j, cultureIndex);
             if(!i.equals(j)){
@@ -83,9 +83,6 @@ public class InputDataParser {
             }
             if (alliance == 1 && !i.equals(j)) {
                 agentInfo.updateAlliance(j);
-            }
-            if (actualAlly == 1 && !i.equals(j)) {
-                agentInfo.updateActualAlly(j);
             }
             info.put(i, agentInfo);
 

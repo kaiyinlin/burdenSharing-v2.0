@@ -165,9 +165,9 @@ public class Observer implements Steppable {
                 a = 1;
                 al = state.allAgents.get(i).allianceDuration.get(j) + 1;
             }
-            if (headerArray.length == 11) { //edit at 2022-07-06
+            if (headerArray.length == 11) { //edit at 2022-07-06 (if the last column is actual alliance)
                 result = String.join(",", lst) + "," + a + "," + al + "\n";
-            } else {
+            } else { //if there are already 13 columns
                 lst[11] = String.valueOf(a); //edit at 2022-07-06
                 lst[12] = String.valueOf(al); //edit at 2022-07-06
                 result = String.join(",", lst) + "\n";

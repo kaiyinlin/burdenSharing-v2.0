@@ -29,14 +29,15 @@ public class Agent implements Steppable {
     Set<Integer> enemy; // original enemy
     Set<Integer> secondaryEnemyFromFile; //original secondary enemy from file
     Set<Integer> alliance;
+    Set<Integer> actualAlliance;
     Set<Integer> neighbors;
 
 
     public Set<Integer> SRG;
 
     public Agent(int id, double capability, int democracy, Set<Integer> enemy,
-                 Set<Integer> secondaryEnemyFromFile, Set<Integer> alliance, Set<Integer> neighbors,
-                 Map<Integer, Integer> culture, Map<Integer, Integer> allianceDuration) {
+                 Set<Integer> secondaryEnemyFromFile, Set<Integer> alliance,
+                 Set<Integer> neighbors, Map<Integer, Integer> culture, Map<Integer, Integer> allianceDuration) {
         this.id = id;
         this.capability = capability;
         this.democracy = democracy;
@@ -151,9 +152,9 @@ public class Agent implements Steppable {
         return secondaryEnemy;
     }
 
-    public Set<Integer> getAlliance() {
-        return this.alliance;
-    }
+    public Set<Integer> getAlliance() {return this.alliance;}
+
+    public Set<Integer> getActualAlliance() {return actualAlliance;}
 
     public Set<Integer> getNeighbors() {
         return this.neighbors;
