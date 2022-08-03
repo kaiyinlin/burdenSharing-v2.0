@@ -20,7 +20,7 @@ public class SimEnvironment extends SimState {
     private static final Logger logger = Logger.getLogger(SimEnvironment.class);
 
     // fixed variables
-    String DEFBURDPATH = "/Users/kaiyinlin/Desktop/defense_burden.csv";
+    String DEFBURDPATH = "/Users/kaiyinlin/Desktop/defense_burden_7_20_2022.csv";
 
     String inputDataFile;
     public String nextInputData;
