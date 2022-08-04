@@ -134,7 +134,8 @@ public class SimEnvironment extends SimState {
         for (Integer agentId : agentIdList) {
             InfoIdentifier agentInfo = dataInformation.get(agentId);
             Agent a = new Agent(agentInfo.getId(), agentInfo.getCapability(), agentInfo.getDemocracy(),
-                    agentInfo.getEnemy(), agentInfo.getSecondaryEnemy(), agentInfo.getAlliance(), agentInfo.getNeighbor(),
+                    agentInfo.getEnemy(), agentInfo.getSecondaryEnemy(), agentInfo.getAlliance(),
+                    agentInfo.getActualAlliance(), agentInfo.getNeighbor(),
                     agentInfo.getCulture(), agentInfo.getAllianceDuration());
             this.allAgents.put(a.id, a);
             a.burdenSharing.put((long)0,(double)0);

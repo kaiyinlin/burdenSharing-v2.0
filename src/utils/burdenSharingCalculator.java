@@ -11,12 +11,17 @@ public class burdenSharingCalculator {
 
     public static double burdenSharing(SimEnvironment state, Agent ai) {
         double f = 1;
-        double alpha = 0.23; //alpha > 0
+        double alpha; //alpha > 0, adjust parameters at 2022-08-02
         double beta = -0.35; //beta < 0
         double gamma = 12; //gamma > 0
         double delta = 1; //delta > 0
         double eta = -1; //eta < 0
         double BS_i = 0; //burden sharing value
+        if(state.year < 1945){
+            alpha = 0.422;
+        } else {
+            alpha = -0.129;
+        }
         BS_i = alpha * need(ai) + beta * (detection(state, ai) * punishment(state, ai)) +
                 gamma * emulation(state, ai) + delta * BS_enemy(state, ai) +
                 eta * allianceDuration(state, ai);
