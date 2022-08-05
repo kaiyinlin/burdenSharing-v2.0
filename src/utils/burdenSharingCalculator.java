@@ -22,7 +22,7 @@ public class burdenSharingCalculator {
         } else {
             alpha = -0.129;
         }
-        BS_i = alpha * need(ai) + beta * (detection(state, ai) * punishment(state, ai)) +
+        BS_i = alpha * need(ai) + /*beta * (detection(state, ai) * punishment(state, ai))*/ +
                 gamma * emulation(state, ai) + delta * BS_enemy(state, ai) +
                 eta * allianceDuration(state, ai);
         //cutoff
