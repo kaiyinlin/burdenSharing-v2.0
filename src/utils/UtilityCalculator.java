@@ -14,7 +14,7 @@ public class UtilityCalculator {
 
         double SRGCapability = 0;
         double marginalUtility;
-        double cost = 0;
+//        double cost = 0;
         Set<Integer> enemy = agent.getEnemy();
         Set<Integer> secondaryEnemy = agent.getSecondaryEnemy(state);
         for (int id : enemy) {
@@ -28,20 +28,19 @@ public class UtilityCalculator {
         double actualAllianceSize = agent.getActualAlliance().size();
         if (actualAllianceSize == 0) {
             marginalUtility = agent.capability - SRGCapability;
-        } else {
-            if (state.year < 1945) {
-                cost = Math.pow(actualAllianceSize, state.costPowerBefore);
-            } else {
-                cost = Math.pow(actualAllianceSize, state.costPowerAfter);
-            }
-
+        }  else {
+//            if (state.year < 1945) {
+//                cost = Math.pow(actualAllianceSize, state.costPowerBefore);
+//            } else {
+//                cost = Math.pow(actualAllianceSize, state.costPowerAfter);
+//            }
             double sum_uij = 0;
             for (int j : agent.getActualAlliance()) {
                 double u_ij = utilityIJ(state, agent, state.getAgent(j));
                 sum_uij += u_ij;
             }
             //logger.debug(String.format("sum_uij=%s and cost=%s", sum_uij,state.costPenalty*cost));
-            marginalUtility = agent.capability + sum_uij - state.costPenalty * cost - SRGCapability;
+            marginalUtility = agent.capability + sum_uij /*- state.costPenalty * cost */ - SRGCapability;
 
         }
         return marginalUtility;
@@ -59,10 +58,7 @@ public class UtilityCalculator {
         // calculate the u_ij
         double u_ij = aj.capability* (state.uij_alpha * attractiveness(ai, aj) +
                 state.uij_beta * prevention(state, ai, aj) +
-                state.uij_gamma * trust(state, ai, aj));
-//        double u_ij = state.uij_alpha * attractiveness(ai, aj) +
-//                state.uij_beta * prevention(state, ai, aj) +
-//                state.uij_gamma * trust(state, ai, aj);
+                state.uij_gamma * trust(state, ai, aj) + state.uij_delta * cost_j(ai, aj));
         return u_ij;
     }
 
@@ -140,5 +136,16 @@ public class UtilityCalculator {
             }
         }
         return R_j;
+    }
+
+    public static int cost_j(Agent ai, Agent aj){
+        int c_j = 0; //The cost term is defined for each prospective ally j
+        //get the number of common enemies (common interests between i and j)
+        Set<Integer> enemyI = ai.getEnemy();
+        Set<Integer> enemyJ = aj.getEnemy();
+        Set<Integer> intersection = SetUtils.intersection(enemyI, enemyJ);
+        int eeIJ = intersection.size();
+        c_j = enemyJ.size() -eeIJ;
+        return c_j;
     }
 }
