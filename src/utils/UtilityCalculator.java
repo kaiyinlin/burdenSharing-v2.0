@@ -58,7 +58,7 @@ public class UtilityCalculator {
         // calculate the u_ij
         double u_ij = aj.capability* (state.uij_alpha * attractiveness(ai, aj) +
                 state.uij_beta * prevention(state, ai, aj) +
-                state.uij_gamma * trust(state, ai, aj) + state.uij_delta * cost_j(ai, aj));
+                state.uij_gamma * trust(state, ai, aj) - state.uij_delta * cost_j(ai, aj));
         return u_ij;
     }
 
