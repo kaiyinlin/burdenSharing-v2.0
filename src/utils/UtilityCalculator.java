@@ -29,11 +29,11 @@ public class UtilityCalculator {
         if (allianceSize == 0) {
             marginalUtility = agent.capability - SRGCapability;
         } else {
-            if (state.year < 1945) {
-                cost = Math.pow(allianceSize, state.costPowerBefore);
-            } else {
-                cost = Math.pow(allianceSize, state.costPowerAfter);
-            }
+//            if (state.year < 1945) {
+//                cost = Math.pow(allianceSize, state.costPowerBefore);
+//            } else {
+//                cost = Math.pow(allianceSize, state.costPowerAfter);
+//            }
 
             double sum_uij = 0;
             for (int j : agent.getAlliance()) {
@@ -41,7 +41,7 @@ public class UtilityCalculator {
                 sum_uij += u_ij;
             }
             //logger.debug(String.format("sum_uij=%s and cost=%s", sum_uij,state.costPenalty*cost));
-            marginalUtility = agent.capability + sum_uij - state.costPenalty * cost - SRGCapability;
+            marginalUtility = agent.capability + sum_uij /*- state.costPenalty * cost */ - SRGCapability;
 
         }
         return marginalUtility;
@@ -59,7 +59,7 @@ public class UtilityCalculator {
         // calculate the u_ij
         double u_ij = aj.capability* (state.uij_alpha * attractiveness(ai, aj) +
                 state.uij_beta * prevention(state, ai, aj) +
-                state.uij_gamma * trust(state, ai, aj));
+                state.uij_gamma * trust(state, ai, aj) - state.uij_delta * cost_j(ai, aj));
 //        double u_ij = state.uij_alpha * attractiveness(ai, aj) +
 //                state.uij_beta * prevention(state, ai, aj) +
 //                state.uij_gamma * trust(state, ai, aj);
@@ -140,5 +140,16 @@ public class UtilityCalculator {
             }
         }
         return R_j;
+    }
+
+    public static int cost_j(Agent ai, Agent aj){
+        int c_j = 0; //The cost term is defined for each prospective ally j
+        //get the number of common enemies (common interests between i and j)
+        Set<Integer> enemyI = ai.getEnemy();
+        Set<Integer> enemyJ = aj.getEnemy();
+        Set<Integer> intersection = SetUtils.intersection(enemyI, enemyJ);
+        int eeIJ = intersection.size();
+        c_j = enemyJ.size() -eeIJ;
+        return c_j;
     }
 }

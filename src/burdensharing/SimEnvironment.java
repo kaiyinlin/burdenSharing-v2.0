@@ -39,12 +39,13 @@ public class SimEnvironment extends SimState {
     public double offerUpperBound = 1;
 //    public double offerLowerBound = -1;
     public int MaxIteration = 20;
-    public double costPenalty = 0.005;
-    public double costPowerBefore = 2;
-    public double costPowerAfter = 0.5;
+//    public double costPenalty = 0.005;
+//    public double costPowerBefore = 2;
+//    public double costPowerAfter = 0.5;
     public double uij_alpha = 1.0;
     public double uij_beta = 0;
     public double uij_gamma = 0;
+    public double uij_delta = 0.2;
 
 
     // set initial value
@@ -65,8 +66,8 @@ public class SimEnvironment extends SimState {
         variableCheckingFile = Paths.get(parent, String.format("%s_variable_checking.csv", year)).toString();
         burdenSharingFile = Paths.get(parent, String.format("%s_burdenSharing.csv", year)).toString();
 
-        logger.info(String.format("HyperParameter: offerUpperBound=%s, maxIter=%s, costPenalty=%s , costPowerBefore=%s, costPowerAfter=%s",
-                offerUpperBound, MaxIteration, costPenalty, costPowerBefore, costPowerAfter));
+//        logger.info(String.format("HyperParameter: offerUpperBound=%s, maxIter=%s, costPenalty=%s , costPowerBefore=%s, costPowerAfter=%s",
+//                offerUpperBound, MaxIteration, costPenalty, costPowerBefore, costPowerAfter));
     }
 
     public static void main(String[] args) {
