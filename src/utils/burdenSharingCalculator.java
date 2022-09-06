@@ -37,9 +37,9 @@ public class burdenSharingCalculator {
      */
     public static int need(Agent ai) {
         if (ai.utility < 0) {
-            return 1;
+            return 1; //need help
         } else {
-            return 0;
+            return 0; //no need allies
         }
     }
 

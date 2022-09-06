@@ -11,3 +11,6 @@ This is the version of burdenSharing v3.0 that is based on burdenSharing_v2.0 da
    we changed the cost term and consequently equation (1) in the security cooperation paper. 
    The cost term is now defined for each prospective ally as c_j = sum e_j - ee_ij. 
    This changes equation (4) in the security cooperation paper accordingly. (data_v14)
+* 2022-09-06: Since the results of data_v14 improve the correctness rate, we wonder if we can apply this version of cost term
+    and implant the all three elements (attractiveness, prevention, and trust) in the utility function 
+    to see if the results can even improve more (data_v15).
