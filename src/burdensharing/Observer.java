@@ -39,7 +39,7 @@ public class Observer implements Steppable {
         try {
             collectData(state);
             burdenSharingData(state);
-//            variableChecking(state);
+            variableChecking(state);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -179,10 +179,11 @@ public class Observer implements Steppable {
         writer.close();
     }
 
+    //add the cost scores at 2022-09-29 because we change the cost term for each potential ally
     private void variableChecking(SimEnvironment state) throws IOException {
         String[] header_variableChecking = {"step", "year", "state_i", "state_j", "EE_ij", "D_j", "NE_ij", "T_ijm",
                 "i's allies", "j's alles", "commonAllies", "A_ij",
-                "enemyI[]", "EE_kj[]", "S_kj[]", "NE_kj[]", "T_kjm[]", "A_kj", "R_j"};
+                "enemyI[]", "EE_kj[]", "S_kj[]", "NE_kj[]", "T_kjm[]", "A_kj", "R_j", "cost_j"};
 
         FileWriter writer;
         File csvFile = new File(state.variableCheckingFile);
@@ -233,8 +234,9 @@ public class Observer implements Steppable {
 
                 double Akj = UtilityCalculator.prevention(state, agentI, agentJ);
                 double Rj = UtilityCalculator.trust(state, agentI, agentJ);
+                double cost = UtilityCalculator.cost_j(agentI, agentJ); //add at 2022-09-29
 
-                String info = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s \n",
+                String info = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s \n",
                         stp, state.year, i, j, EE, Dj, NE, T,
                         agentI.getAlliance().stream().map(String::valueOf).collect(Collectors.joining("|")),
                         agentJ.getAlliance().stream().map(String::valueOf).collect(Collectors.joining("|")),
@@ -242,7 +244,7 @@ public class Observer implements Steppable {
                         Aij, allEnemies.stream().map(String::valueOf).collect(Collectors.joining("|")),
                         String.join("|", EE_kj), String.join("|", S_kj),
                         String.join("|", NE_kj), String.join("|", T_kjm),
-                        Akj, Rj);
+                        Akj, Rj, cost);
                 writer.write(info);
             }
         }
