@@ -75,7 +75,7 @@ public class Agent implements Steppable {
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
             List<Integer> potentialOrderedList = new ArrayList<>(sorted.keySet()); // sort the potential allies by utilities
             //logger.debug(String.format("Agent %s potentialAllies", this.id) + potentialOrderedList);
-            while (needMorePartner(state) && potentialOrderedList.size() > 0) {
+            while (potentialOrderedList.size() > 0 && UtilityCalculator.utilityIJ(state, this, state.getAgent(potentialOrderedList.get(0))) > 0) {
                 // make the offer
 //                logger.debug(String.format("Agent %s making offer to %s, u_ij=%s",
 //                        this.id, potentialOrderedList.get(0), potentialAllies_uij.get(potentialOrderedList.get(0))));
@@ -84,9 +84,9 @@ public class Agent implements Steppable {
                 //logger.debug("Accept Offer: " + accept);
                 if (accept) {
                     boolean validOffer = OfferUtils.validateOffer(state, this, targetAgent);
-//                    if (validOffer && logger.isDebugEnabled()) {
-//                        logger.debug("Offer change: f" + state.OfferChange);
-//                    }
+                    if (validOffer && logger.isDebugEnabled()) {
+                       logger.debug("Offer change: f" + state.OfferChange);
+                    }
                 }
 
                 potentialOrderedList.remove(0);

@@ -14,3 +14,11 @@ This is the version of burdenSharing v3.0 that is based on burdenSharing_v2.0 da
 * 2022-09-06: Since the results of data_v14 improve the correctness rate, we wonder if we can apply this version of cost term
     and implant the all three elements (attractiveness, prevention, and trust) in the utility function 
     to see if the results can even improve more (data_v15).
+* 2022-10-13: Intend to allow 1st enemies to form alliance. However, in this version, I still exclude the 1st enemies in the potential-ally list.
+    I only changed the u_ij calculations (0.5*u_ij), so their u_ij is not zero anymore. (data_v16)
+* 2022-10-22: Correct codes. Allow 1st enemies to form alliances. from 1816-2014 (data_v17)
+* 2022-10-22: Correct codes. Allow 1st enemies to form alliances, but only from 1945-2014 (data_18)
+* 2022-10-25: Use actual ally dataset as first year input (1816), and then use simulated network for following years (data_v19)
+* 2022-10-25: Create a series of random number for each input variable, from 1816-2014. The dataset
+    was based on same prob. of real data. Random datasets were input annually (data_v20).
+* 

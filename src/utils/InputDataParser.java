@@ -48,13 +48,14 @@ public class InputDataParser {
             Integer neighb = Integer.valueOf(lst[8]);
             Integer enemy = Integer.valueOf(lst[9]);
             //use actual alliance data as input; edit at 2022-07-15
-            alliance = Integer.valueOf(lst[10]);
-            //use simulated alliance data from last year as input)
-//            if (lst.length == 12) {
-//                alliance = Integer.valueOf(lst[11]);
-//            } else {
+//            alliance = Integer.valueOf(lst[10]);
+            //use simulated alliance data from last year as input
+            if (lst.length == 13) {
+                alliance = Integer.valueOf(lst[11]);
+            } else {
 //                alliance = 0;
-//            }
+                alliance = Integer.valueOf(lst[10]); //use actual ally as input for fist year: edit at 2022-10-18
+            }
             //alliance duration
             if(lst.length ==13){
 //                allianceDuration = Integer.valueOf(lst[11]);

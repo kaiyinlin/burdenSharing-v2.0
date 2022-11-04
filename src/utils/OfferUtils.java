@@ -17,7 +17,7 @@ public class OfferUtils {
 
         Set<Integer> potentialAllies = new HashSet<>(state.agentIdList);
         potentialAllies.removeAll(alliance);
-        potentialAllies.removeAll(a.getEnemy());
+//        potentialAllies.removeAll(a.getEnemy());
         potentialAllies.remove(a.id);
         return potentialAllies;
     }

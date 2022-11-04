@@ -3,7 +3,8 @@
 # variable settings
 JAR_NAME=/Users/kaiyinlin/eclipse-workspace/BurdenSharing-hsin-mac/out/artifacts/BurdenSharing_hsin_mac_jar/BurdenSharing-hsin-mac.jar
 echo $JAR_LOCATION
-DATA_BY_YEAR_LOCATION=/Users/kaiyinlin/Desktop/dataByYear
+#DATA_BY_YEAR_LOCATION=/Users/kaiyinlin/Desktop/dataByYear
+DATA_BY_YEAR_LOCATION=/Users/kaiyinlin/Desktop/dataByYear_random
 
 
 # 1816

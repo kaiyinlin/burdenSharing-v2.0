@@ -48,8 +48,14 @@ public class UtilityCalculator {
     }
 
     public static double utilityIJ(SimEnvironment state, Agent ai, Agent aj) {
-        if (ai == aj || ai.getEnemy().contains(aj.id)) {
+        if (ai == aj) {
             return 0;
+        }
+        if(ai.getEnemy().contains(aj.id)){
+            double u_ij = 0.5 * aj.capability* (state.uij_alpha * attractiveness(ai, aj) +
+                    state.uij_beta * prevention(state, ai, aj) +
+                    state.uij_gamma * trust(state, ai, aj) - state.uij_delta * cost_j(ai, aj));
+            return u_ij;
         }
 
         // update both SRG to avoid too much for loops
