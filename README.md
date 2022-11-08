@@ -21,4 +21,5 @@ This is the version of burdenSharing v3.0 that is based on burdenSharing_v2.0 da
 * 2022-10-25: Use actual ally dataset as first year input (1816), and then use simulated network for following years (data_v19)
 * 2022-10-25: Create a series of random number for each input variable, from 1816-2014. The dataset
     was based on same prob. of real data. Random datasets were input annually (data_v20).
-* 
+* 2022-11-06: modified equations for security cooperation ABM - from zeev. 
+    This version is using 1816 real data as first year input and then use simulated network for following inputs (data_v21).

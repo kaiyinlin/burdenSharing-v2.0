@@ -43,9 +43,9 @@ public class SimEnvironment extends SimState {
 //    public double costPowerBefore = 2;
 //    public double costPowerAfter = 0.5;
     public double uij_alpha = 0.6;
-    public double uij_beta = 0.1;
-    public double uij_gamma = 0.3;
-    public double uij_delta = 0.2;
+    public double uij_beta = 0.2;
+    public double uij_gamma = 0.2;
+    public double uij_delta = 0.1;
 
 
     // set initial value

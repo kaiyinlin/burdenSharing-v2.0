@@ -81,10 +81,9 @@ public class UtilityCalculator {
 
         double A_ij;
         if (ai.democracy == 1) {
-            A_ij = 0.9593453 * EE + 0.5485924 * Dj + 1.477012 * S + 1.092695 * NE + 0.5274558 * T;
+            A_ij = 0.426 * EE + 0.043 * Dj + 0.13 * S + 0.003 * NE + 0.565 * T;
         } else {
-            A_ij = 0.8485381 * EE + 0.0211666 * Dj + 1.412664 * S + 0.6035882 * NE + 0.5274558 * T;
-
+            A_ij = 0.42 * EE + 0.043 * Dj + 0.062 * S + 0.003 * NE + 0.595 * T;
         }
         return A_ij;
     }
@@ -109,7 +108,11 @@ public class UtilityCalculator {
         Set<Integer> allianceJ = aj.getAlliance();
 
         Set<Integer> commonAlliance = SetUtils.intersection(allianceI, allianceJ);
-        return commonAlliance.size();
+        if(commonAlliance.size() < 2){
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     public static double prevention(SimEnvironment state, Agent ai, Agent aj) {
@@ -138,12 +141,14 @@ public class UtilityCalculator {
         if (allianceJ.size() == 0) {
             return 0;
         } else {
-            for (int k : allianceJ) {
-                Agent ak = state.allAgents.get(k); //ak is j's alliance
-                double a_kj = attractiveness(ak,aj); //attractiveness between ak and aj
-                //double u_il = ai.uij.getOrDefault(l, 0.0);
-                R_j += a_kj;
+            double sumU_ik = 0;
+            for (int l : allianceJ) {
+//                Agent ak = state.allAgents.get(l); //ak is j's alliance
+//                double a_kj = attractiveness(ak, aj); //attractiveness between ak and aj
+                double u_il = ai.uij.getOrDefault(l, 0.0); //basically see how useful the potential ally (j's ally) is
+                sumU_ik += u_il;
             }
+            R_j = sumU_ik / allianceJ.size();
         }
         return R_j;
     }
@@ -156,6 +161,12 @@ public class UtilityCalculator {
         Set<Integer> intersection = SetUtils.intersection(enemyI, enemyJ);
         int eeIJ = intersection.size();
         c_j = enemyJ.size() -eeIJ;
-        return c_j;
+        if(c_j == 0){
+            return 0;
+        } else if(c_j > 0 && c_j <= 10) {
+            return 1;
+        } else{
+            return 2;
+        }
     }
 }
