@@ -36,7 +36,7 @@ public class SimEnvironment extends SimState {
     public DefburdFactor defburdInfo;
 
     // parameters
-    public double offerUpperBound = 1;
+    public double offerUpperBound = 0.7;
 //    public double offerLowerBound = -1;
     public int MaxIteration = 20;
 //    public double costPenalty = 0.005;

@@ -81,9 +81,9 @@ public class UtilityCalculator {
 
         double A_ij;
         if (ai.democracy == 1) {
-            A_ij = 0.426 * EE + 0.043 * Dj + 0.13 * S + 0.003 * NE + 0.565 * T;
+            A_ij = 0.426 * EE + 0.043 * Dj + 0.062 * S + 0.003 * NE + 0.595 * T;
         } else {
-            A_ij = 0.42 * EE + 0.043 * Dj + 0.062 * S + 0.003 * NE + 0.595 * T;
+            A_ij = 0.447 * EE - 0.020 * Dj + 0.130 * S + 0.003 * NE + 0.565 * T;
         }
         return A_ij;
     }
